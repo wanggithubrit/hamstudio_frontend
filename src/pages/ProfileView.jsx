@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { User, LogOut, Package, MapPin, Phone, Mail, Calendar, ChevronDown, ChevronUp, Lock } from 'lucide-react';
+import WishlistView from './WishlistView';
 
 export default function ProfileView({ 
   setActiveTab, 
   profile, 
   setProfile, 
   loggedInEmail, 
-  setLoggedInEmail 
+  setLoggedInEmail,
+  wishlist = [],
+  onAddToCart,
+  toggleWishlist,
+  onSelectProduct
 }) {
   const [emailInput, setEmailInput] = useState('');
   
@@ -198,6 +203,12 @@ export default function ProfileView({
                   className={`profile-subtab-btn ${subTab === 'addresses' ? 'active' : ''}`}
                 >
                   My Addresses
+                </button>
+                <button 
+                  onClick={() => setSubTab('wishlist')}
+                  className={`profile-subtab-btn ${subTab === 'wishlist' ? 'active' : ''}`}
+                >
+                  My Wishlist
                 </button>
               </div>
 
@@ -419,6 +430,25 @@ export default function ProfileView({
                         </div>
                       </form>
                     </div>
+                  </div>
+                )}
+
+                {/* 4. MY WISHLIST SUBTAB */}
+                {subTab === 'wishlist' && (
+                  <div className="page-fade" style={{ maxWidth: '900px' }}>
+                    <div style={{ marginBottom: '2.5rem' }}>
+                      <h2 style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', marginBottom: '0.5rem', fontWeight: 'bold' }}>My Wishlist</h2>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Inspect and manage your saved sterling silver jewelry pieces.</p>
+                      <div style={{ borderBottom: '1px solid var(--border-color)', marginTop: '1.5rem' }} />
+                    </div>
+
+                    <WishlistView 
+                      wishlist={wishlist}
+                      onAddToCart={onAddToCart}
+                      toggleWishlist={toggleWishlist}
+                      setActiveTab={setActiveTab}
+                      onSelectProduct={onSelectProduct}
+                    />
                   </div>
                 )}
 

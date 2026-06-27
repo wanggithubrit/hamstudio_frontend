@@ -471,6 +471,10 @@ export default function App() {
           setProfile={setProfile}
           loggedInEmail={clientEmail}
           setLoggedInEmail={setClientEmail}
+          wishlist={wishlist}
+          onAddToCart={handleAddToCart}
+          toggleWishlist={toggleWishlist}
+          onSelectProduct={setSelectedProduct}
         />
       )}
       {activeTab === 'wishlist' && (

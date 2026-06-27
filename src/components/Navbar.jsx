@@ -80,6 +80,15 @@ export default function Navbar({ activeTab, setActiveTab, cartCount, setSearchQu
                 Contact
               </a>
             </li>
+            <li>
+              <a 
+                href="#wishlist" 
+                className={activeTab === 'wishlist' ? 'active' : ''} 
+                onClick={(e) => { e.preventDefault(); handleLinkClick('wishlist'); }}
+              >
+                Wishlist
+              </a>
+            </li>
           </ul>
         )}
 
@@ -109,7 +118,6 @@ export default function Navbar({ activeTab, setActiveTab, cartCount, setSearchQu
             className="nav-logo"
             onClick={(e) => { e.preventDefault(); handleLinkClick('home'); }}
           >
-            <Gem className="nav-logo-icon" />
             <span>HAM STUDIO</span>
           </a>
         )}
@@ -146,17 +154,6 @@ export default function Navbar({ activeTab, setActiveTab, cartCount, setSearchQu
               <Moon size={12} className="theme-toggle-icon moon" />
             </button>
             
-            {/* Wishlist Icon Button */}
-            <button 
-              className={`nav-icon-btn ${activeTab === 'wishlist' ? 'active' : ''}`} 
-              aria-label="Wishlist"
-              onClick={() => handleLinkClick('wishlist')}
-            >
-              <Heart size={18} strokeWidth={1.5} />
-              {wishlist && wishlist.length > 0 && (
-                <span className="cart-count-badge" style={{ backgroundColor: 'var(--accent-gold)' }}>{wishlist.length}</span>
-              )}
-            </button>
 
             <button 
               className="nav-icon-btn" 

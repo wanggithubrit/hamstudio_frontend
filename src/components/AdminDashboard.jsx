@@ -19,7 +19,9 @@ import {
   FileImage,
   Clock,
   HelpCircle,
-  FileText
+  FileText,
+  Instagram,
+  Upload
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -44,6 +46,7 @@ export default function AdminDashboard() {
   const [messages, setMessages] = useState([]);
   const [settings, setSettings] = useState([]);
   const [faqs, setFaqs] = useState([]);
+  const [socialItems, setSocialItems] = useState([]);
   
   // UI states
   const [searchTerm, setSearchTerm] = useState('');
@@ -147,6 +150,11 @@ export default function AdminDashboard() {
       const faqRes = await fetch('/api/admin/faqs/');
       const faqData = await faqRes.json();
       setFaqs(faqData);
+
+      // Fetch social feed items
+      const socialRes = await fetch('/api/admin/social-feed/');
+      const socialData = await socialRes.json();
+      setSocialItems(socialData);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
     } finally {
@@ -399,6 +407,54 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       alert('Error saving policy');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  // Social Feed CRUD
+  const handleSaveSocial = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.target);
+    if (fileInput) {
+      formData.append('image', fileInput);
+    }
+    try {
+      const res = await fetch('/api/admin/social-feed/', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        setModalType(null);
+        setSelectedItem(null);
+        setFileInput(null);
+        fetchDashboardData();
+      } else {
+        alert(data.error || 'Failed to save social item');
+      }
+    } catch (err) {
+      alert('Error saving social item');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteSocial = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this social feed image?")) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/social-feed/${id}/`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        fetchDashboardData();
+      } else {
+        alert(data.error || 'Failed to delete social item');
+      }
+    } catch (err) {
+      alert('Error deleting social item');
     } finally {
       setLoading(false);
     }
@@ -1189,6 +1245,14 @@ export default function AdminDashboard() {
             <span>Policies Manager</span>
           </button>
           
+          <button 
+            className={`menu-item ${activeTab === 'social' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('social'); setSearchTerm(''); }}
+          >
+            <Instagram size={18} />
+            <span>Social Feed</span>
+          </button>
+          
           <button onClick={handleLogout} className="menu-item logout-btn">
             <LogOut size={18} />
             <span>Sign Out</span>
@@ -1208,6 +1272,7 @@ export default function AdminDashboard() {
               {activeTab === 'settings' && 'Global Site settings'}
               {activeTab === 'faqs' && 'FAQ Directory Manager'}
               {activeTab === 'policies' && 'Store Policies Editor'}
+              {activeTab === 'social' && 'Social Instagram Feed Manager'}
             </h1>
             <p style={{ color: '#9ca3af', fontSize: '0.9rem', margin: '4px 0 0 0' }}>
               Real-time synchronization active
@@ -1803,6 +1868,70 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+
+        {/* TAB 9: SOCIAL FEED ("AS SEEN ON YOU") */}
+        {activeTab === 'social' && (
+          <div>
+            <div className="control-bar">
+              <div className="search-wrapper">
+                <Search size={16} className="search-icon" />
+                <input 
+                  type="text" 
+                  placeholder="Search Alt Text..." 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <button 
+                className="add-btn"
+                onClick={() => { setSelectedItem(null); setFileInput(null); setModalType('social_add'); }}
+              >
+                <Plus size={16} />
+                <span>Add Social Image</span>
+              </button>
+            </div>
+
+            <div className="admin-card-table" style={{ marginTop: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem', padding: '1.5rem' }}>
+                {socialItems.filter(item => 
+                  item.altText.toLowerCase().includes(searchTerm.toLowerCase())
+                ).map(item => (
+                  <div key={item.id} style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ width: '100%', height: '200px', backgroundColor: '#0f0f10', position: 'relative' }}>
+                      <img 
+                        src={item.image} 
+                        alt={item.altText} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      />
+                      <button 
+                        onClick={() => handleDeleteSocial(item.id)}
+                        style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'rgba(239, 68, 68, 0.9)', color: '#ffffff', border: 'none', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+                        title="Delete Image"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                    <div style={{ padding: '1rem', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <p style={{ fontSize: '0.85rem', color: '#9ca3af', lineHeight: '1.4', margin: 0 }}>
+                        {item.altText}
+                      </p>
+                      <span style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '0.75rem', fontFamily: 'monospace' }}>
+                        ID: {item.id}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                {socialItems.filter(item => 
+                  item.altText.toLowerCase().includes(searchTerm.toLowerCase())
+                ).length === 0 && (
+                  <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem 0', color: '#9ca3af' }}>
+                    No matching social feed images found.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       
       {/* --------------------------------------------------
@@ -2107,6 +2236,60 @@ export default function AdminDashboard() {
               <div className="modal-footer">
                 <button type="button" className="btn-cancel" onClick={() => { setModalType(null); setSelectedItem(null); }}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-save">{loading ? 'Saving...' : 'Save Policy Document'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Social Feed Add Modal */}
+      {modalType === 'social_add' && (
+        <div className="modal-overlay">
+          <div className="modal-card" style={{ maxWidth: '500px' }}>
+            <div className="modal-header">
+              <h3>Add Social Feed Image</h3>
+              <button className="modal-close" onClick={() => { setModalType(null); setFileInput(null); }}><X size={18} /></button>
+            </div>
+            
+            <form onSubmit={handleSaveSocial}>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label>Alt Text / Image Description *</label>
+                  <input 
+                    type="text" 
+                    name="altText" 
+                    required 
+                    placeholder="e.g. Sterling silver rings and chains stacked"
+                    style={{ width: '100%' }}
+                  />
+                </div>
+
+                <div className="form-group" style={{ marginTop: '15px' }}>
+                  <label>Upload Image File</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => setFileInput(e.target.files[0])}
+                      style={{ border: 'none', background: 'transparent', padding: 0 }}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group" style={{ marginTop: '15px' }}>
+                  <label>Or Fallback Image URL</label>
+                  <input 
+                    type="text" 
+                    name="image_url" 
+                    placeholder="e.g. /media/social_image.jpg"
+                    style={{ width: '100%' }}
+                  />
+                </div>
+              </div>
+              
+              <div className="modal-footer">
+                <button type="button" className="btn-cancel" onClick={() => { setModalType(null); setFileInput(null); }}>Cancel</button>
+                <button type="submit" disabled={loading} className="btn-save">{loading ? 'Saving...' : 'Add Image'}</button>
               </div>
             </form>
           </div>

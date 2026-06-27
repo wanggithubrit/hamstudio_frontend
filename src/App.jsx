@@ -80,6 +80,7 @@ export default function App() {
     social_img_2: "/media__1781974705838.jpg",
     social_img_3: "/media__1781974705839.jpg"
   });
+  const [socialFeed, setSocialFeed] = useState([]);
 
   // Handle Preloader timer
   useEffect(() => {
@@ -130,6 +131,20 @@ export default function App() {
       })
       .catch((err) => {
         console.warn('Using fallback local UI settings:', err.message);
+      });
+
+    fetch('/api/social-feed/')
+      .then((res) => {
+        if (!res.ok) throw new Error('API social feed returned error');
+        return res.json();
+      })
+      .then((data) => {
+        if (data && Array.isArray(data)) {
+          setSocialFeed(data);
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not fetch social feed:', err.message);
       });
   }, []);
   
@@ -388,6 +403,7 @@ export default function App() {
         <HomeView 
           setActiveTab={setActiveTab} 
           settings={settings}
+          socialFeed={socialFeed}
         />
       )}
       {activeTab === 'shop' && (

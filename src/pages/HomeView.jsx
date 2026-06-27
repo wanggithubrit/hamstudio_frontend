@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Sparkles, Truck, Clock } from 'lucide-react';
 
-export default function HomeView({ setActiveTab, settings }) {
+export default function HomeView({ setActiveTab, settings, socialFeed = [] }) {
   return (
     <main className="home-view page-fade">
       {/* Hero Section */}
@@ -81,24 +81,41 @@ export default function HomeView({ setActiveTab, settings }) {
           </div>
 
           <div className="social-pics-grid stagger-in">
-            <div className="social-pic-card">
-              <img 
-                src={settings.social_img_1} 
-                alt="Designer crosses and skulls on white plate" 
-              />
-            </div>
-            <div className="social-pic-card">
-              <img 
-                src={settings.social_img_2} 
-                alt="Silver rings and bracelets on box" 
-              />
-            </div>
-            <div className="social-pic-card">
-              <img 
-                src={settings.social_img_3} 
-                alt="Curated cross necklaces hanging" 
-              />
-            </div>
+            {socialFeed && socialFeed.length > 0 ? (
+              socialFeed.map((item, index) => (
+                <div 
+                  key={item.id || index} 
+                  className="social-pic-card"
+                  style={{ animationDelay: `${index * 80}ms` }}
+                >
+                  <img 
+                    src={item.image} 
+                    alt={item.altText || "HAM STUDIO curated sterling silver piece"} 
+                  />
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="social-pic-card">
+                  <img 
+                    src={settings.social_img_1 || "/media__1781974764103.jpg"} 
+                    alt="Designer crosses and skulls on white plate" 
+                  />
+                </div>
+                <div className="social-pic-card">
+                  <img 
+                    src={settings.social_img_2 || "/media__1781974705838.jpg"} 
+                    alt="Silver rings and bracelets on box" 
+                  />
+                </div>
+                <div className="social-pic-card">
+                  <img 
+                    src={settings.social_img_3 || "/media__1781974705839.jpg"} 
+                    alt="Curated cross necklaces hanging" 
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>

@@ -4157,13 +4157,17 @@ html[data-theme="light"] .product-wishlist-btn-floating:hover {
 }
 
 /* Hide mobile-only buttons on desktop, and desktop-only buttons on mobile */
-.mobile-only-btn {
-  display: none;
+.mobile-only-btn,
+.mobile-only {
+  display: none !important;
 }
 
 @media (max-width: 768px) {
   .mobile-only-btn {
     display: flex;
+  }
+  .mobile-only {
+    display: inline-flex !important;
   }
   
   /* Make sure floating buttons display correctly inside image wrapper relative context */

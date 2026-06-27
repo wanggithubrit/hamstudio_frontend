@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { recommendedProducts } from '../data/mockData';
-import { ChevronDown, ShoppingBag, Heart, Share2, Sparkles, Truck, RotateCcw, Plus, Minus } from 'lucide-react';
+import { ChevronDown, ShoppingBag, Heart, Share2, Sparkles, Truck, RotateCcw, Plus, Minus, Eye } from 'lucide-react';
 
 export default function ProductDetailView({ 
   product, 
@@ -8,7 +8,8 @@ export default function ProductDetailView({
   onSelectProduct,
   setActiveTab,
   wishlist = [],
-  toggleWishlist = () => {}
+  toggleWishlist = () => {},
+  onAddToCart = () => {}
 }) {
   const isWishlisted = wishlist.some((item) => item.id === product.id);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
@@ -286,27 +287,70 @@ export default function ProductDetailView({
         </div>
 
         <div className="products-grid stagger-in">
-          {recommendedProducts.map((rec) => (
-            <div 
-              key={rec.id} 
-              className="product-card"
-              onClick={() => handleRecommendationClick(rec)}
-              style={{ cursor: 'pointer' }}
-            >
-              <div className="product-image-container" style={{ height: '280px' }}>
-                <img src={rec.image} alt={rec.name} className="product-image" />
-              </div>
-              <div className="product-info">
-                <div>
-                  <h3 className="product-title" style={{ fontSize: '1.05rem' }}>{rec.name}</h3>
-                  <p className="product-subtext">{rec.meta}</p>
+          {recommendedProducts.map((rec, idx) => {
+            const isWishlistedRec = wishlist.some((item) => item.id === rec.id);
+            return (
+              <div 
+                key={rec.id} 
+                className="product-card"
+                onClick={() => handleRecommendationClick(rec)}
+                style={{ cursor: 'pointer', animationDelay: `${idx * 50}ms` }}
+              >
+                <div className="product-image-container" style={{ height: '280px', position: 'relative' }}>
+                  <img src={rec.image} alt={rec.name} className="product-image" />
+                  
+                  {/* Wishlist Button */}
+                  <button 
+                    type="button"
+                    className={`product-wishlist-btn-floating ${isWishlistedRec ? 'active' : ''}`}
+                    onClick={(e) => { e.stopPropagation(); toggleWishlist(rec); }}
+                    aria-label={isWishlistedRec ? "Remove from wishlist" : "Add to wishlist"}
+                  >
+                    <Heart size={15} fill={isWishlistedRec ? "var(--accent-gold)" : "none"} stroke={isWishlistedRec ? "var(--accent-gold)" : "currentColor"} />
+                  </button>
+
+                  {/* Floating Quick Add Button (Mobile Only) */}
+                  <button
+                    type="button"
+                    className="product-quick-add-btn-floating mobile-only-btn"
+                    onClick={(e) => { e.stopPropagation(); onAddToCart(rec); }}
+                    aria-label="Quick add to cart"
+                  >
+                    <ShoppingBag size={14} />
+                  </button>
+
+                  {/* Dual Action Overlay */}
+                  <div className="product-add-overlay" style={{ gap: '0.75rem' }}>
+                    <button 
+                      className="product-btn-add"
+                      onClick={(e) => { e.stopPropagation(); handleRecommendationClick(rec); }}
+                      title="View Details"
+                      style={{ padding: '0.75rem' }}
+                    >
+                      <Eye size={14} />
+                    </button>
+                    <button 
+                      className="product-btn-add"
+                      onClick={(e) => { e.stopPropagation(); onAddToCart(rec); }}
+                      title="Quick Add"
+                      style={{ padding: '0.75rem' }}
+                    >
+                      <ShoppingBag size={14} />
+                    </button>
+                  </div>
                 </div>
-                <span className="product-price" style={{ fontSize: '0.9rem' }}>
-                  ₹{rec.price.toLocaleString('en-IN')}
-                </span>
+                <div className="product-info">
+                  <div>
+                    <h3 className="product-title" style={{ fontSize: '1.05rem' }}>{rec.name}</h3>
+                    <p className="product-subtext">{rec.meta}</p>
+                  </div>
+                  <span className="product-price" style={{ fontSize: '0.9rem' }}>
+                    ₹{rec.price.toLocaleString('en-IN')}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

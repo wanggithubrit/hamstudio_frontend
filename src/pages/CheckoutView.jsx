@@ -302,23 +302,19 @@ export default function CheckoutView({
                       <h4>{item.name}</h4>
                       <p>{item.meta}</p>
                       
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                      <div className="item-qty-selector" style={{ marginTop: '0.5rem' }}>
                         <button 
                           type="button" 
                           onClick={() => onUpdateQty(item.id, item.quantity - 1)}
                           aria-label="Decrease quantity"
-                          style={{ border: '1px solid var(--border-color)', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}
                         >
                           <Minus size={10} />
                         </button>
-                        <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-accent)', width: '16px', textAlign: 'center', color: 'var(--text-primary)' }}>
-                          {item.quantity}
-                        </span>
+                        <span>{item.quantity}</span>
                         <button 
                           type="button" 
                           onClick={() => onUpdateQty(item.id, item.quantity + 1)}
                           aria-label="Increase quantity"
-                          style={{ border: '1px solid var(--border-color)', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}
                         >
                           <Plus size={10} />
                         </button>
@@ -326,7 +322,8 @@ export default function CheckoutView({
                         <button 
                           type="button" 
                           onClick={() => onRemoveItem(item.id)}
-                          style={{ marginLeft: 'auto', color: 'var(--text-muted)', display: 'inline-flex' }}
+                          className="item-remove-btn"
+                          style={{ marginLeft: 'auto', display: 'inline-flex', background: 'none', border: 'none', padding: 0 }}
                           aria-label="Remove item"
                         >
                           <Trash2 size={14} />

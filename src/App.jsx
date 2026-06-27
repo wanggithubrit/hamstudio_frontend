@@ -408,6 +408,7 @@ export default function App() {
           setActiveTab={setActiveTab}
           wishlist={wishlist}
           toggleWishlist={toggleWishlist}
+          onAddToCart={handleAddToCart}
         />
       )}
       {activeTab === 'checkout' && (

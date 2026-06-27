@@ -12,6 +12,7 @@ import PolicyView from './pages/PolicyView';
 import ProfileView from './pages/ProfileView';
 import { products } from './data/mockData';
 import WishlistView from './pages/WishlistView';
+import { API_BASE_URL } from './config';
 import { Sparkles, Check } from 'lucide-react';
 import AdminDashboard from './components/AdminDashboard';
 import CartDrawer from './components/CartDrawer';
@@ -103,7 +104,7 @@ export default function App() {
 
   // Fetch products and settings on mount
   useEffect(() => {
-    fetch('/api/products/')
+    fetch(`${API_BASE_URL}/api/products/`)
       .then((res) => {
         if (!res.ok) throw new Error('API server returned error');
         return res.json();
@@ -119,7 +120,7 @@ export default function App() {
         console.warn('Using fallback local products database:', err.message);
       });
 
-    fetch('/api/settings/')
+    fetch(`${API_BASE_URL}/api/settings/`)
       .then((res) => {
         if (!res.ok) throw new Error('API settings server returned error');
         return res.json();
@@ -133,7 +134,7 @@ export default function App() {
         console.warn('Using fallback local UI settings:', err.message);
       });
 
-    fetch('/api/social-feed/')
+    fetch(`${API_BASE_URL}/api/social-feed/`)
       .then((res) => {
         if (!res.ok) throw new Error('API social feed returned error');
         return res.json();
@@ -333,7 +334,7 @@ export default function App() {
     setProfile(clientProfileVal);
     localStorage.setItem('hamstudio_client_profile', JSON.stringify(clientProfileVal));
 
-    fetch('/api/orders/', {
+    fetch(`${API_BASE_URL}/api/orders/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

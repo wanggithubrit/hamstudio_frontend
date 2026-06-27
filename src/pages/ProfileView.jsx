@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, LogOut, Package, MapPin, Phone, Mail, Calendar, ChevronDown, ChevronUp, Lock } from 'lucide-react';
 import WishlistView from './WishlistView';
+import { API_BASE_URL } from '../config';
 
 export default function ProfileView({ 
   setActiveTab, 
@@ -33,7 +34,7 @@ export default function ProfileView({
     setLoading(true);
     setErrorMsg('');
     try {
-      const res = await fetch(`/api/orders/history/?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`${API_BASE_URL}/api/orders/history/?email=${encodeURIComponent(email)}`);
       if (!res.ok) throw new Error('Failed to fetch history');
       const data = await res.json();
       setOrders(data);

@@ -23,6 +23,14 @@ import {
   Instagram,
   Upload
 } from 'lucide-react';
+import { API_BASE_URL } from '../config';
+
+const fetch = (url, options) => {
+  const finalUrl = typeof url === 'string' && url.startsWith('/') 
+    ? `${API_BASE_URL}${url}` 
+    : url;
+  return window.fetch(finalUrl, options);
+};
 
 export default function AdminDashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

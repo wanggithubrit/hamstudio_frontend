@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { faqItems } from '../data/mockData';
 import { ChevronDown, Send, ArrowRight } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export default function FaqView({ setActiveTab }) {
   const [faqs, setFaqs] = useState(faqItems);
   const [openId, setOpenId] = useState('');
 
   useEffect(() => {
-    fetch('/api/faqs/')
+    fetch(`${API_BASE_URL}/api/faqs/`)
       .then(res => {
         if (!res.ok) throw new Error("API error");
         return res.json();

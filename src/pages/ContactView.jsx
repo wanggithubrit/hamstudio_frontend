@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Send, Check, Instagram, Mail, MapPin } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export default function ContactView({ setActiveTab }) {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -13,7 +14,7 @@ export default function ContactView({ setActiveTab }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    fetch('/api/contact/', {
+    fetch(`${API_BASE_URL}/api/contact/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

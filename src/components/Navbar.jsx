@@ -80,15 +80,6 @@ export default function Navbar({ activeTab, setActiveTab, cartCount, setSearchQu
                 Contact
               </a>
             </li>
-            <li>
-              <a 
-                href="#wishlist" 
-                className={activeTab === 'wishlist' ? 'active' : ''} 
-                onClick={(e) => { e.preventDefault(); handleLinkClick('wishlist'); }}
-              >
-                Wishlist
-              </a>
-            </li>
           </ul>
         )}
 

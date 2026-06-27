@@ -11,6 +11,7 @@ import FaqView from './pages/FaqView';
 import PolicyView from './pages/PolicyView';
 import ProfileView from './pages/ProfileView';
 import { products } from './data/mockData';
+import WishlistView from './pages/WishlistView';
 import { Sparkles, Check } from 'lucide-react';
 import AdminDashboard from './components/AdminDashboard';
 import CartDrawer from './components/CartDrawer';
@@ -374,11 +375,12 @@ export default function App() {
       <Navbar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        cartCount={cartCount} 
+        cartCount={cart.reduce((acc, i) => acc + i.quantity, 0)} 
         setSearchQuery={setSearchQuery}
         theme={theme}
         toggleTheme={toggleTheme}
         setCartOpen={setCartOpen}
+        wishlist={wishlist}
       />
 
       {/* Render Active View */}
@@ -453,6 +455,15 @@ export default function App() {
           setProfile={setProfile}
           loggedInEmail={clientEmail}
           setLoggedInEmail={setClientEmail}
+        />
+      )}
+      {activeTab === 'wishlist' && (
+        <WishlistView 
+          wishlist={wishlist}
+          onAddToCart={handleAddToCart}
+          toggleWishlist={toggleWishlist}
+          setActiveTab={setActiveTab}
+          onSelectProduct={setSelectedProduct}
         />
       )}
 

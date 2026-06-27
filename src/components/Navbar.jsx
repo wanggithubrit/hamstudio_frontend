@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ShoppingBag, User, Gem, Search, X, Menu, Instagram, Mail, Sun, Moon } from 'lucide-react';
+import { ShoppingBag, User, Gem, Search, X, Menu, Instagram, Mail, Sun, Moon, Heart } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, cartCount, setSearchQuery, theme, toggleTheme, setCartOpen }) {
+export default function Navbar({ activeTab, setActiveTab, cartCount, setSearchQuery, theme, toggleTheme, setCartOpen, wishlist }) {
   const [showSearch, setShowSearch] = useState(false);
   const [localQuery, setLocalQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -146,6 +146,18 @@ export default function Navbar({ activeTab, setActiveTab, cartCount, setSearchQu
               <Moon size={12} className="theme-toggle-icon moon" />
             </button>
             
+            {/* Wishlist Icon Button */}
+            <button 
+              className={`nav-icon-btn ${activeTab === 'wishlist' ? 'active' : ''}`} 
+              aria-label="Wishlist"
+              onClick={() => handleLinkClick('wishlist')}
+            >
+              <Heart size={18} strokeWidth={1.5} />
+              {wishlist && wishlist.length > 0 && (
+                <span className="cart-count-badge" style={{ backgroundColor: 'var(--accent-gold)' }}>{wishlist.length}</span>
+              )}
+            </button>
+
             <button 
               className="nav-icon-btn" 
               aria-label="Shopping cart"
@@ -219,6 +231,16 @@ export default function Navbar({ activeTab, setActiveTab, cartCount, setSearchQu
                   onClick={(e) => { e.preventDefault(); handleLinkClick('profile'); }}
                 >
                   My Profile
+                </a>
+              </li>
+              <li>
+                <span className="mobile-menu-link-num">06</span>
+                <a 
+                  href="#wishlist" 
+                  className={activeTab === 'wishlist' ? 'active' : ''} 
+                  onClick={(e) => { e.preventDefault(); handleLinkClick('wishlist'); }}
+                >
+                  My Wishlist
                 </a>
               </li>
             </ul>

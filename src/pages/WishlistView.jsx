@@ -6,7 +6,8 @@ export default function WishlistView({
   onAddToCart, 
   toggleWishlist, 
   setActiveTab, 
-  onSelectProduct 
+  onSelectProduct,
+  hideHeader = false
 }) {
   const handleProductClick = (product) => {
     onSelectProduct(product);
@@ -14,17 +15,19 @@ export default function WishlistView({
   };
 
   return (
-    <main className="wishlist-view container section-padding page-fade" style={{ minHeight: '80vh', paddingTop: '3rem' }}>
-      <div className="catalog-header" style={{ marginBottom: '3rem', textAlign: 'center' }}>
-        <p className="section-subtitle" style={{ letterSpacing: '0.2em' }}>YOUR FAVOURITES</p>
-        <h1 style={{ fontSize: '3rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontWeight: '400' }}>My Wishlist</h1>
-        <p style={{ maxWidth: '600px', margin: '1rem auto 0', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-          Keep track of the sterling silver pieces you command. Add them directly to your bag or view details.
-        </p>
-      </div>
+    <main className={`wishlist-view ${!hideHeader ? 'container section-padding' : ''} page-fade`} style={{ minHeight: !hideHeader ? '80vh' : 'auto', paddingTop: !hideHeader ? '3rem' : '0' }}>
+      {!hideHeader && (
+        <div className="catalog-header" style={{ marginBottom: '3rem', textAlign: 'center' }}>
+          <p className="section-subtitle" style={{ letterSpacing: '0.2em' }}>YOUR FAVOURITES</p>
+          <h1 style={{ fontSize: '3rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontWeight: '400' }}>My Wishlist</h1>
+          <p style={{ maxWidth: '600px', margin: '1rem auto 0', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+            Keep track of the sterling silver pieces you command. Add them directly to your bag or view details.
+          </p>
+        </div>
+      )}
 
       {wishlist.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '5rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }} className="page-fade">
+        <div style={{ textAlign: 'center', padding: hideHeader ? '3rem 0' : '5rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }} className="page-fade">
           <div style={{ position: 'relative', display: 'inline-flex', padding: '1.5rem', borderRadius: '50%', backgroundColor: 'var(--accent-transparent)' }}>
             <Heart size={48} strokeWidth={1} style={{ color: 'var(--accent-gold)' }} />
           </div>
@@ -103,19 +106,9 @@ export default function WishlistView({
                     <h3 className="product-title">{product.name}</h3>
                     <p className="product-subtext">{product.category}</p>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                    <span className="product-price">
-                      ₹{product.price.toLocaleString('en-IN')}
-                    </span>
-                    <button 
-                      type="button" 
-                      onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
-                      className="btn-primary btn-sm"
-                      style={{ padding: '0.4rem 0.8rem', fontSize: '0.65rem' }}
-                    >
-                      Add To Bag
-                    </button>
-                  </div>
+                  <span className="product-price">
+                    ₹{product.price.toLocaleString('en-IN')}
+                  </span>
                 </div>
               </div>
             );

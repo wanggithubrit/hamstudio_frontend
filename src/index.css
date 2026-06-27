@@ -3496,6 +3496,7 @@ html[data-theme="light"] .mobile-menu-links li {
   cursor: pointer;
   position: relative;
   transition: color 0.3s ease;
+  white-space: nowrap;
 }
 
 .profile-subtab-btn:hover {

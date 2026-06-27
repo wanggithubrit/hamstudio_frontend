@@ -448,6 +448,7 @@ export default function ProfileView({
                       toggleWishlist={toggleWishlist}
                       setActiveTab={setActiveTab}
                       onSelectProduct={onSelectProduct}
+                      hideHeader={true}
                     />
                   </div>
                 )}
